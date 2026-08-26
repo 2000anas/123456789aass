@@ -1,6 +1,10 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
 
-dotenv.config();
+const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../..');
+
+dotenv.config({ path: path.join(rootDir, '.env') });
 
 export const env = {
   port: Number(process.env.PORT) || 5001,
@@ -11,6 +15,8 @@ export const env = {
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   nodeEnv: process.env.NODE_ENV || 'development',
   isProd: process.env.NODE_ENV === 'production',
+  rootDir,
+  webDist: path.join(rootDir, 'dist/web'),
 };
 
 export const CURRENCIES = ['USD', 'SYP'] as const;

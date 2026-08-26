@@ -7,6 +7,9 @@ async function start() {
   app.listen(env.port, () => {
     console.log(`Server running on http://localhost:${env.port}`);
     console.log(`Timezone: ${env.timezone}`);
+    if (env.isProd) {
+      console.log(`Serving web UI from ${env.webDist}`);
+    }
   });
 }
 

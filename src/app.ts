@@ -1,3 +1,4 @@
+import path from 'node:path';
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -13,10 +14,16 @@ import apiRoutes from './routes/index.js';
 
 const app = express();
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
+);
+
 app.use(
   cors({
-    origin: env.clientUrl,
+    origin: env.isProd ? true : env.clientUrl,
     credentials: true,
   })
 );
@@ -34,7 +41,27 @@ app.use('/api/employees', employeeRoutes);
 app.use('/api/attendance', attendanceRoutes);
 app.use('/api', apiRoutes);
 
-app.use(notFound);
+app.use('/api', notFound);
+
+if (env.isProd) {
+  app.use(express.static(env.webDist, { index: false }));
+  app.use((req, res, next) => {
+    if (req.method !== 'GET' && req.method !== 'HEAD') {
+      next();
+      return;
+    }
+    if (req.path.startsWith('/api')) {
+      next();
+      return;
+    }
+    res.sendFile(path.join(env.webDist, 'index.html'), (err) => {
+      if (err) next(err);
+    });
+  });
+} else {
+  app.use(notFound);
+}
+
 app.use(errorHandler);
 
 export default app;
