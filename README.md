@@ -1,115 +1,44 @@
-# Elyptek Manage
+# Elyptek
 
-نظام بسيط واحترافي لإدارة التدفق النقدي وحضور الموظفين لشركة إليبتك.
+تطبيق واحد لإدارة التدفق النقدي وحضور الموظفين: الواجهة وواجهة الـ API في نفس المشروع، ويُنشَران على منفذ واحد.
 
-## المميزات
+## الهيكل
 
-- إدارة وارد/صادر نقدي بعملتي USD و SYP
-- إدارة الموظفين والجداول
-- تسجيل حضور/انصراف بتوقيت الخادم (Asia/Damascus)
-- حساب الراتب الشهري مع خصم الغياب والتأخير
-- تقارير مالية قابلة للطباعة
-- واجهة عربية RTL مستوحاة من هوية إليبتك
-
-## التقنيات
-
-- Frontend: React + TypeScript + Vite
-- Backend: Node.js + Express + TypeScript
-- Database: MongoDB + Mongoose
-- Auth: JWT + bcrypt
+- `web/` — واجهة React
+- `src/` — Express + MongoDB
+- `dist/` — ناتج البناء (`dist/server.js` للـ API و`dist/web` للواجهة)
 
 ## التشغيل
 
-### المتطلبات
-
-- Node.js 20+
-- MongoDB يعمل محلياً
-
-### التثبيت
+المتطلبات: Node.js 20+ و MongoDB.
 
 ```bash
-cd server && npm install
-cd ../client && npm install
-cd .. && npm install
-```
-
-### إعداد البيئة
-
-انسخ `server/.env.example` إلى `server/.env` وعدّل القيم عند الحاجة.
-
-### بيانات أولية
-
-```bash
-npm run seed --prefix server
-```
-
-حساب المدير (للتطوير فقط — غيّر كلمة المرور):
-
-- Email: `admin@example.com`
-- Password: `change-me`
-
-موظفين تجريبيين:
-
-- `ahmad@example.com` / `employee123`
-- `sara@example.com` / `employee123`
-- `mahmoud@example.com` / `employee123`
-
-### تشغيل التطوير
-
-```bash
-# من جذر المشروع
-npm run dev --prefix server
-npm run dev --prefix client
-```
-
-- API: http://localhost:5001
-- App: http://localhost:5173
-
-## النشر على Netlify (الواجهة الأمامية)
-
-Netlify يستضيف **واجهة React فقط**. خادم Express و MongoDB يحتاجان استضافة منفصلة (مثل Render + MongoDB Atlas).
-
-### الطريقة 1: ربط Git (موصى بها)
-
-1. ارفع المشروع إلى GitHub/GitLab.
-2. في [Netlify](https://app.netlify.com) → **Add new site** → **Import from Git**.
-3. Netlify يقرأ `netlify.toml` تلقائياً:
-   - **Base directory:** `client`
-   - **Build command:** `npm run build`
-   - **Publish directory:** `client/dist`
-4. في **Site settings → Environment variables** أضف:
-   - `VITE_API_URL` = `https://YOUR-BACKEND-URL/api`
-5. انشر الموقع، ثم حدّث `CLIENT_URL` في خادم API ليطابق رابط Netlify.
-
-### الطريقة 2: رفع يدوي (Drag & Drop)
-
-```bash
-cd client
+cp .env.example .env
 npm install
-# عدّل .env أو export قبل البناء:
-# export VITE_API_URL=https://YOUR-BACKEND-URL/api
-npm run build
+npm run seed
+npm run dev
 ```
 
-ارفع مجلد **`client/dist`** إلى [Netlify Drop](https://app.netlify.com/drop).
+- الواجهة: http://localhost:5173
+- الـ API: http://localhost:5001/api
 
-### بناء محلي للتحقق
+حساب المدير (للتطوير فقط): `admin@example.com` / `change-me`
+
+## الإنتاج (منفذ واحد)
 
 ```bash
-cd client && npm run build
+npm run build
+npm start
 ```
 
-الملفات الجاهزة للرفع ستكون في `client/dist/`.
+يفتح على http://localhost:5001
 
-## العملات
+## Docker
 
-النظام يدعم **USD** و **SYP** في نفس الوقت:
-
-- كل معاملة لها عملة محددة
-- الرصيد يُحسب لكل عملة: `إجمالي الوارد - إجمالي الصادر`
-- رواتب الموظفين يمكن أن تكون بأي من العملتين
-
-## المنطقة الزمنية
-
-الافتراضي: `Asia/Damascus` عبر متغير `APP_TIMEZONE`.
-أوقات الحضور تؤخذ من الخادم وليس من متصفح المستخدم.
+```bash
+docker build -t elyptek .
+docker run --rm -p 5001:5001 \
+  -e MONGODB_URI="mongodb://host.docker.internal:27017/elyptek-manage" \
+  -e JWT_SECRET="your-production-secret" \
+  elyptek
+```
