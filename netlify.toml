@@ -7,6 +7,7 @@
   NODE_VERSION = "20"
   NETLIFY = "true"
   NPM_CONFIG_PRODUCTION = "false"
+  SECRETS_SCAN_OMIT_KEYS = "APP_TIMEZONE,NODE_ENV,JWT_EXPIRES_IN,CLIENT_URL"
 
 [functions]
   node_bundler = "esbuild"
