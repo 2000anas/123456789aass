@@ -13,7 +13,7 @@
     "dev:local": "concurrently -n api,web -c blue,green \"tsx watch src/server.ts\" \"vite\"",
     "dev:api": "tsx watch src/server.ts",
     "dev:web": "vite",
-    "build": "tsc -p tsconfig.server.json && vite build",
+    "build": "npx tsc -p tsconfig.server.json && npx vite build",
     "start": "NODE_ENV=production node dist/server.js",
     "seed": "tsx src/scripts/seed.ts"
   },
