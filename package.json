@@ -15,7 +15,8 @@
     "dev:web": "vite",
     "build": "npx tsc -p tsconfig.server.json && npx vite build",
     "start": "NODE_ENV=production node dist/server.js",
-    "seed": "tsx src/scripts/seed.ts"
+    "seed": "tsx src/scripts/seed.ts",
+    "seed:min": "tsx src/scripts/seed-min.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.3",

@@ -11,6 +11,7 @@ import transactionRoutes from './routes/transaction.routes.js';
 import employeeRoutes from './routes/employee.routes.js';
 import attendanceRoutes from './routes/attendance.routes.js';
 import apiRoutes from './routes/index.js';
+import setupRoutes from './routes/setup.routes.js';
 
 const app = express();
 
@@ -35,6 +36,7 @@ app.get('/api/health', (_req, res) => {
   res.json({ success: true, message: 'Elyptek Manage API is running' });
 });
 
+app.use('/api/setup', setupRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
 app.use('/api/employees', employeeRoutes);
