@@ -43,7 +43,7 @@ app.use('/api', apiRoutes);
 
 app.use('/api', notFound);
 
-if (env.isProd) {
+if (env.isProd && !env.isNetlify) {
   app.use(express.static(env.webDist, { index: false }));
   app.use((req, res, next) => {
     if (req.method !== 'GET' && req.method !== 'HEAD') {

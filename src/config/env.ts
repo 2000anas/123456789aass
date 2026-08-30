@@ -15,6 +15,7 @@ export const env = {
   clientUrl: process.env.CLIENT_URL || 'http://localhost:5173',
   nodeEnv: process.env.NODE_ENV || 'development',
   isProd: process.env.NODE_ENV === 'production',
+  isNetlify: process.env.NETLIFY === 'true',
   rootDir,
   webDist: path.join(rootDir, 'dist/web'),
 };
